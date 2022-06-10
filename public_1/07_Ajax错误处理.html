@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="btn">发送Ajax请求</button>
+
+    <script>
+        var btn = document.getElementById('btn');
+        btn.addEventListener('click', () => {
+                // 创建 Ajax 对象
+            var xhr = new XMLHttpRequest();
+            // 2. 告诉 Ajax 对象要向那发送请求，以什么方法发送请求
+            // 1) 请求方式   2) 请求地址
+            xhr.open('get','http://localhost:3000/error');
+            // 3. 发送请求
+            xhr.send();
+            // 4. 获取服务器端响应到客户端的数据
+            xhr.addEventListener('load', () => { 
+                console.log(xhr.responseText);   // not ok
+                // xhr.status 获取http状态码
+                console.log(xhr.status);   // 400
+                if (xhr.status == 400) {
+                    alert('请求出错!');
+                }
+            });
+            // 当网络中断时会触发 onerror 事件
+            xhr.addEventListener('error', () => {
+                alert('网络中断，无法发送Ajax请求');
+            });
+        });
+
+        // Ajax状态码: 表示Ajax请求的过程状态   ajax对象放回的
+        // Http状态码: 表示请求的处理的结果 是服务器端返回的
+    </script>
+</body>
+</html>

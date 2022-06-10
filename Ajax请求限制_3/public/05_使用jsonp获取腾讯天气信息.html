@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <style>
+        .container {
+            padding-top: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <table class="table table-striped table-hover" align="center" id="box">
+
+        </table>
+    </div>
+
+    <script src="../js/jsop.js"></script>
+    <!-- 模板js -->
+    <script src="../js/template-web.js"></script>
+
+    <script type="text/html" id="tpl">
+        <tr>
+            <th>时间</th>
+            <th>温度</th>
+            <th>天气</th>
+            <th>风向</th>
+            <th>风力</th>
+        </tr>
+        {{each info}}
+        <tr>
+            <!-- degree: "10"     // 温度
+            update_time: "20220428090000"  // 时间
+            weather: "晴"     // 天气名称
+            weather_code: "00"   // 天气码
+            weather_short: "晴"   // 天气简要名称
+            wind_direction: "西北风"   // 风向
+            wind_power: "3"         // 风力级别      -->    
+            <td>{{dataFormat($value.update_time)}}</td>
+            <td>{{$value.degree}}</td>
+            <td>{{$value.weather}}</td>
+            <td>{{$value.wind_direction}}</td>
+            <td>{{$value.wind_power}}</td>
+        </tr>
+        {{/each}}
+    </script>
+
+    <script>
+        // 获取table标签
+        var box = document.getElementById('box');
+
+        function dataFormat(data) {
+            var year = data.substr(0, 4);
+            var month = data.substr(4, 2);
+            var day = data.substr(6, 2);
+            var hour = data.substr(8, 2);
+            var minute = data.substr(10, 2);
+            var seconds = data.substr(12, 2);
+
+            return year + '年' + month + '月' + day + '日' + hour + '时' + minute + '分' + seconds + '秒';
+        }
+
+        // 向模板中开放外部变量
+        template.defaults.imports.dataFormat = dataFormat;
+
+        // 向服务器端获取天气信息
+        jsonp({  // get
+            url: 'https://wis.qq.com/weather/common',   // 请求地址
+            data: {
+                source: 'pc',  // pc 电脑端， xw 手机端  
+                weather_type: 'forecast_1h',  // forecast_1h 未来48小时， forecast_24h 未来7天
+                // weather_type: 'forecast_1h|forecast_24h',  // 都获取到用|隔开
+                province: '湖北省',  // 省份
+                city: '武汉市'   // 城市
+            },
+            success: function (data) {  // data 腾讯服务器返回的对象
+                var html = template('tpl', { info: data.data.forecast_1h });
+                box.innerHTML = html;
+            }
+        });
+    </script>
+</body>
+</html>

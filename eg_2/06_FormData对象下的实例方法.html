@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 创建普通的html表单 -->
+    <form id="form">
+        <input type="text" name="username">
+        <input type="password" name="password">
+        <input type="button" id="btn" value="提交">
+    </form>
+
+    <script>
+        // 获取按钮
+        var btn = document.getElementById('btn');
+        // 获取表单
+        var form = document.getElementById('form');
+        // 为按钮添加点击事件
+        btn.onclick = () => {
+            // 将普通的html表单转换为表单对象
+            var formData = new FormData(form);
+
+            /*
+                get('key') 获取表单对象属性的值
+                set('key','value') 设置表单对象中属性的值
+                delete('key') 删除表单对象属性中的值 
+            */
+            console.log(formData.get('username'));
+            formData.set('username', 'itcast');
+            formData.append('username', 'itheima');
+
+            // 如果设置的表单属性存在 将会覆盖属性原有的值
+            console.log(formData.get('username'));
+
+            // 如果设置的表单属性不存在 将会创建这个表单属性
+            formData.set('age', 100);
+            console.log(formData.get('age'));
+
+            // 删除用户输入的密码
+            console.log(formData.get('password'));
+            formData.delete('password');
+            console.log(formData.get('password'));
+
+
+
+            // 创建 ajax 对象
+            var xhr = new XMLHttpRequest();
+            // 对 ajax 对象进行配置
+            xhr.open('post', 'http://localhost:3000/formData');
+            // 发送 ajax 请求
+            xhr.send(formData);
+            // 监听 xhr 对象下面的onload事件
+            xhr.onload = () => {
+                // 对象http状态码进行判断
+                if (xhr.status == 200) {
+                    console.log(xhr.responseText);
+                }
+            }
+
+            // 创建空的表单对象
+            var f = new FormData();
+            f.append('sex', '男');
+            console.log(f.get('sex'));
+        }
+    </script>
+</body>
+</html>

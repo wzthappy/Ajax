@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="btn">发送请求</button>
+
+    <script src="./js/jquery.min.js"></script>
+    <script>
+        $('#btn').on('click', function() {
+            $.get('http://localhost:3000/base', 'name=zhangsan&age=4343', function(response) {
+                console.log(response);
+            });
+            // $.post('http://localhost:3000/base', function(response) {
+            //     console.log(response);
+            // });
+        });
+    </script>
+</body>
+</html>

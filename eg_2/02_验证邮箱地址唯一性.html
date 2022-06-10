@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>验证邮箱地址是否已经注册</title>
+    <!-- bootstrap.min.css 框架   让页面更好看 -->
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+
+    <style>
+        /* css 中的 :not(:empty) 是否定伪类选择器，选择p中所有为空的标签 */
+        p:not(:empty) {
+            padding: 15px;
+        }
+        .container {
+            padding-top: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-group">
+            <label>邮政地址</label>
+            <input type="email" class="form-control" placeholder="请输入邮政地址" id="email">
+        </div>
+       
+        <!-- 错误 bg-danger  正确 bg-success -->
+        <p id="info"></p>
+    </div>
+
+    
+    <script src="./js/ajax.js"></script>
+    <!-- <script src="./js/jquery.min.js"></script> -->
+    <script>
+        // 获取页面中的元素
+        var emailInp = document.getElementById('email');
+        var info = document.getElementById('info');
+        
+        // 当文本框离开焦点以后
+        emailInp.addEventListener('blur', () => {
+            // 获取用户输入的邮箱地址
+            var email = emailInp.value;
+
+            // 验证邮箱地址的正则表达式
+            var reg = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/;
+        
+            // 如果用户输入的邮箱地址不符合规则
+            if (!reg.test(email)) {
+                // 给出用户提示
+                info.innerHTML = '请输入符合规则的邮政地址';
+                // 让提示消息显示为错误提示消息的样式
+                info.className = 'bg-danger';;
+            
+                // 阻止程序向下执行
+                return false;
+            }
+
+            // 向服务器发送请求
+            ajax({
+                type: 'get',
+                url: 'http://localhost:3000/verifyEmailAdress',
+                data: {
+                    email: email
+                },
+                success: (result) => {
+                    console.log(result);
+                    info.innerHTML = result.message;
+                    info.className = 'bg-success';
+                },
+                error: (result) => {
+                    console.log(result);
+                    info.innerHTML = result.message;
+                    info.className = 'bg-danger';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

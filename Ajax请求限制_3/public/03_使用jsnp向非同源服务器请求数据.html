@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="btn">点我发送请求</button>
+
+    <script>
+        function fn2(data) {
+            console.log('客户端的fn函数被调用了');
+            console.log(data);
+        }
+    </script>
+
+
+    <script>
+        // 获取按钮
+        var btn = document.getElementById('btn');
+        // 为按钮添加点击事件
+        btn.onclick = () => {
+            // 创建script标签
+            var script = document.createElement('script');
+            // 设置src属性
+            script.src = 'http://localhost:3002/better?callback=fn2';
+            // 将script标签追加到页面中yuesu
+            document.body.appendChild(script);
+            // 为script标签添加onload事件
+            script.onload = function() {
+                // 将body中的script标签删除掉
+                document.body.removeChild(script);
+            }
+        }
+    </script>
+</body>
+</html>
